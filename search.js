@@ -142,8 +142,8 @@ async function handleSearch(e) {
 
     currentQuery = query;
     
-    // Construct Fetch URL based on strategy
-    let fetchUrl = `http://127.0.0.1:5000/search?q=${encodeURIComponent(query)}`;
+    // Construct Fetch URL based on strategy, dynamically using the current host IP
+    let fetchUrl = `http://${window.location.hostname}:5000/search?q=${encodeURIComponent(query)}`;
     if (retrievalStrategy.value === 'topK') {
         fetchUrl += `&k=${topKSelector.value}`;
     } else {
