@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IITGN Semantic Scholarly Search</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Dark Mode Toggle -->
+    <button id="darkModeToggle" class="btn btn-outline-secondary position-fixed top-0 end-0 m-3 z-3 shadow-sm rounded-circle" style="width: 48px; height: 48px;">
+        <i class="bi bi-moon"></i>
+    </button>
+
+    <div class="container-fluid py-5">
+        <!-- Header Section -->
+        <header class="mb-5 text-center">
+            <h1 class="display-5 fw-bold text-primary mb-4"><i class="bi bi-book-half me-2"></i>IITGN Semantic Scholarly Search</h1>
+            
+            <div class="row justify-content-center">
+                <div class="col-md-10 col-lg-8">
+                    <form id="searchForm" class="d-flex shadow-lg rounded-pill bg-white p-2 border align-items-center">
+                        <select id="retrievalStrategy" class="form-select border-0 bg-transparent fw-semibold text-primary px-3" style="width: auto; min-width: 140px; cursor: pointer;" title="Retrieval Strategy">
+                            <option value="topK" selected>Top K</option>
+                            <option value="minScore">Min Score</option>
+                        </select>
+                        <div class="vr mx-2 my-2 opacity-25" style="height: 24px;"></div>
+                        
+                        <div id="topKContainer" class="px-2">
+                            <select id="topKSelector" class="form-select border-0 bg-transparent fw-semibold" style="width: auto; min-width: 90px; cursor: pointer;">
+                                <option value="50">50</option>
+                                <option value="100" selected>100</option>
+                                <option value="250">250</option>
+                                <option value="500">500</option>
+                            </select>
+                        </div>
+                        
+                        <div id="minScoreContainer" class="d-none px-2">
+                            <input type="number" id="minScoreInput" class="form-control border-0 bg-transparent fw-semibold text-center" style="width: 100px;" placeholder="> 0.75" step="0.01" min="0" max="1" value="0.75">
+                        </div>
+
+                        <div class="vr mx-2 my-2 opacity-25" style="height: 24px;"></div>
+                        <input type="text" id="searchInput" class="form-control border-0 bg-transparent form-control-lg shadow-none flex-grow-1" placeholder="Search semantic index (e.g., machine learning)..." required>
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 ms-2 fw-semibold d-flex align-items-center">
+                            <i class="bi bi-search me-2"></i> Search
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </header>
+
+        <div class="row g-4 justify-content-center" style="max-width: 1400px; margin: 0 auto;">
+            <!-- Sidebar -->
+            <div class="col-lg-3">
+                <!-- Mobile Toggle for Sidebar -->
+                <button class="btn btn-outline-primary w-100 d-lg-none mb-3 shadow-sm" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarContent" aria-expanded="false" aria-controls="sidebarContent">
+                    <i class="bi bi-funnel"></i> Filters & Sort
+                </button>
+
+                <div class="collapse d-lg-block" id="sidebarContent">
+                    <!-- Statistics Panel -->
+                    <div class="card mb-4 shadow-sm border-0 rounded-4 overflow-hidden stat-card">
+                        <div class="card-header bg-primary text-white border-bottom-0 py-3">
+                            <h6 class="text-uppercase fw-bold mb-0"><i class="bi bi-bar-chart-fill me-2"></i> Search Statistics</h6>
+                        </div>
+                        <div class="card-body bg-white" id="statisticsPanel">
+                            <p class="text-muted small mb-0 text-center py-3">No search performed yet.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="card mb-4 shadow-sm border-0 rounded-4 overflow-hidden">
+                        <div class="card-body bg-white">
+                            <button id="exportCsvBtn" class="btn btn-sm btn-outline-success w-100 fw-semibold py-2 rounded-pill" disabled>
+                                <i class="bi bi-filetype-csv me-1"></i> Export Results to CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sort -->
+                    <div class="card mb-4 shadow-sm border-0 rounded-4 overflow-hidden">
+                        <div class="card-header bg-light border-bottom-0 pt-3 pb-2">
+                            <h6 class="text-uppercase text-muted fw-bold mb-0 small">Sort By</h6>
+                        </div>
+                        <div class="card-body bg-white pt-2">
+                            <select id="sortSelector" class="form-select form-select-sm border-0 bg-light rounded-3 py-2 fw-semibold">
+                                <option value="score">Relevance Score</option>
+                                <option value="newest">Newest Year</option>
+                                <option value="oldest">Oldest Year</option>
+                                <option value="titleAZ">Title A-Z</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
+                        <div class="card-header bg-light border-bottom-0 pt-3 pb-2 d-flex justify-content-between align-items-center">
+                            <h6 class="text-uppercase text-muted fw-bold mb-0 small">Filters</h6>
+                            <button id="clearFiltersBtn" class="btn btn-link btn-sm text-decoration-none p-0 fw-semibold text-danger">Clear All</button>
+                        </div>
+                        <div class="card-body bg-white pt-2">
+                            <!-- Year Filter -->
+                            <div class="mb-4">
+                                <label class="form-label small fw-bold text-primary mb-2">Year</label>
+                                <div id="yearFilterContainer" class="filter-container custom-scrollbar">
+                                    <div class="text-muted small">No data</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Journal Filter -->
+                            <div class="mb-4">
+                                <label class="form-label small fw-bold text-primary mb-2">Journal</label>
+                                <div id="journalFilterContainer" class="filter-container custom-scrollbar">
+                                    <div class="text-muted small">No data</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Publisher Filter -->
+                            <div class="mb-4">
+                                <label class="form-label small fw-bold text-primary mb-2">Publisher</label>
+                                <div id="publisherFilterContainer" class="filter-container custom-scrollbar">
+                                    <div class="text-muted small">No data</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Language Filter -->
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold text-primary mb-2">Language</label>
+                                <div id="languageFilterContainer" class="filter-container custom-scrollbar">
+                                    <div class="text-muted small">No data</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <!-- Loading State -->
+                <div id="loadingState" class="text-center py-5 d-none bg-white rounded-4 shadow-sm border-0 h-100 d-flex flex-column align-items-center justify-content-center min-vh-50">
+                    <div class="spinner-grow text-primary" role="status" style="width: 3rem; height: 3rem;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <h5 class="mt-4 fw-semibold text-primary">Searching semantic index...</h5>
+                    <p class="text-muted small">Vector embeddings are being retrieved and sorted.</p>
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="text-center py-5 d-none bg-white rounded-4 shadow-sm border-0 h-100 d-flex flex-column align-items-center justify-content-center min-vh-50">
+                    <i class="bi bi-search text-muted display-1 mb-4 opacity-25"></i>
+                    <h4 class="text-muted fw-bold">No matching papers found.</h4>
+                    <p class="text-muted">Try adjusting your query or clearing some filters.</p>
+                    <button class="btn btn-outline-primary mt-2 rounded-pill px-4" onclick="document.getElementById('searchInput').focus()">Try Another Search</button>
+                </div>
+
+                <!-- Results Container -->
+                <div id="resultsContainer" class="d-flex flex-column gap-4">
+                    <!-- Result cards injected here -->
+                </div>
+
+                <!-- Pagination -->
+                <nav aria-label="Search results pages" class="mt-5 mb-5 d-none" id="paginationNav">
+                    <ul class="pagination justify-content-center pagination-lg shadow-sm rounded-pill overflow-hidden bg-white d-inline-flex m-0" id="paginationContainer">
+                        <!-- Pagination injected here -->
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="search.js"></script>
+</body>
+</html>

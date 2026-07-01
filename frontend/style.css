@@ -1,0 +1,12 @@
+body {
+    background: #f5f5f5;
+}
+
+.card {
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+#results {
+    max-height: 80vh;
+    overflow-y: auto;
+}
