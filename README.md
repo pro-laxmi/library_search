@@ -37,21 +37,18 @@ Instead of just matching words, this system understands the *context and meaning
 
 ---
 
-## How to Run & Manual Configurations
+## How to Run (Automated Setup)
 
-To make this accessible to anyone on the local network (e.g., IITGN Campus Wi-Fi), we have provided an automated script (`run.sh`) that starts both the backend API and the frontend web server simultaneously.
+To make this accessible to anyone on the local network (e.g., IITGN Campus Wi-Fi), we have provided a fully automated "one-click" script (`run.sh`).
 
-### 1. Manual Configuration (Required)
-Before running the system or deploying to GitHub Pages, you must update the frontend to point to your backend.
-1. Find your computer's local IP address (e.g., by running `ip a` or checking the output of `run.sh`).
-2. Open `search.js` in the root folder.
-3. Update the very first line to use your IP address instead of `127.0.0.1`.
-   ```javascript
-   let fetchUrl = "http://YOUR_LOCAL_IP:5000/search";
-   ```
+This script will automatically:
+1. Verify Python is installed.
+2. Create the Python virtual environment (`.library`) if it doesn't exist.
+3. Install all dependencies from `requirements.txt`.
+4. Launch the Flask backend and the HTTP frontend servers simultaneously.
 
-### 2. Start the Servers
-Open a terminal in the root `library_search` directory and make the script executable:
+### 1. Start the Servers
+Open a terminal in the root `library_search` directory and make the script executable (only needed once):
 ```bash
 chmod +x run.sh
 ```
@@ -61,5 +58,7 @@ Then, run the script:
 ./run.sh
 ```
 
-### 3. Access the Search Engine
-The script will output a URL (like `http://10.7.58.52:8000`). Anyone connected to the campus Wi-Fi can open that URL in their browser to access the search engine. Press `Ctrl+C` in the terminal when you are ready to shut down both servers.
+### 2. Access the Search Engine
+The frontend Javascript uses `window.location.hostname` to automatically detect your computer's IP address and connect to the backend securely, meaning **Zero Manual Configuration is required**.
+
+The script will output a URL (like `http://10.7.58.52:8000`). Anyone connected to the campus Wi-Fi can open that URL in their browser to instantly access the search engine. Press `Ctrl+C` in the terminal when you are ready to shut down both servers.
