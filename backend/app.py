@@ -12,8 +12,13 @@ from services.filters import apply_filters
 app = Flask(__name__)
 CORS(app)
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
-SOLR_BASE_URL = "http://10.0.112.57:8983/solr/iitgn_article_search"
+SOLR_BASE_URL = f"{os.getenv('SOLR_URL')}/solr/iitgn_article_search"
 
 print("Booting up embedding model...")
 model = SentenceTransformer(EMBEDDING_MODEL)

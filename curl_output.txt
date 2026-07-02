@@ -1,9 +1,0 @@
-HTTP/1.1 200 OK
-Server: Werkzeug/3.1.8 Python/3.12.3
-Date: Wed, 01 Jul 2026 08:28:43 GMT
-Content-Type: application/json
-Content-Length: 1744
-Access-Control-Allow-Origin: *
-Connection: close
-
-{"data":[{"author":["Eliot Marshall"],"doi":"10.1126/science.242.4880.845.c","id":"3740551","is_referenced_by_count":0,"issue":["4880"],"journal":["Science"],"language":"en","online_link":"https://www.science.org/doi/pdf/10.1126/science.242.4880.845.c | https://www.science.org/doi/10.1126/science.242.4880.845.c","published_date":"2021-10-22T00:00:00Z","publisher":["American Association for the Advancement of Science (AAAS)"],"score":0.87040216,"title":["<i>Response</i>\n            : Drug Testing"],"volume":"242","year":2021},{"author":["Mervyn Susser"],"author2":["Zena A. Stein"],"doi":"10.1126/science.203.4377.227.a","id":"3495227","is_referenced_by_count":0,"issue":["4377"],"journal":["Science"],"language":"en","online_link":"https://www.science.org/doi/pdf/10.1126/science.203.4377.227.a | https://www.science.org/doi/10.1126/science.203.4377.227.a","published_date":"2021-10-23T00:00:00Z","publisher":["American Association for the Advancement of Science (AAAS)"],"score":0.8661885,"title":["<i>Response</i>\n            : Hypothesis Testing"],"volume":"203","year":2021},{"author":["E. Marshall"],"doi":"10.1126/science.242.4880.845c","id":"3524937","is_referenced_by_count":0,"issue":["4880"],"journal":["Science"],"language":"en","online_link":"https://syndication.highwire.org/content/doi/10.1126/science.242.4880.845c | https://www.sciencemag.org/lookup/doi/10.1126/science.242.4880.845c","published_date":"2013-03-16T00:00:00Z","publisher":["American Association for the Advancement of Science (AAAS)"],"score":0.86339736,"title":["Response: Drug Testing"],"volume":"242","year":2013}],"query":"test","retrieved":3,"status":"success","timings":{"dedup_ms":0.06,"embedding_ms":25.21,"retrieval_ms":85.02,"total_ms":110.28}}
